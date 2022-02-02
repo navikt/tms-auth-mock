@@ -9,7 +9,7 @@ import io.ktor.util.pipeline.*
 
 fun Route.tokenApi(
     tokendingsMetadataBuilder: TokendingsMetadataBuilder,
-    tokenExchangeService: TokenExchangeService
+    tokenExchangeService: TokendingsExchangeService
 ) {
     get("/tokendings/.well-known/oauth-authorization-server") {
         val metadata = tokendingsMetadataBuilder.createConfigurationMetadata()
@@ -18,7 +18,7 @@ fun Route.tokenApi(
     }
 
     get("/tokendings/jwks") {
-        val metadata = tokendingsMetadataBuilder.createConfigurationMetadata()
+        val metadata = tokendingsMetadataBuilder.createJwksMetadata()
 
         call.respond(metadata)
     }
@@ -35,13 +35,13 @@ fun Route.tokenApi(
 }
 
 private suspend fun PipelineContext<Unit, ApplicationCall>.exchangeTokenAndRespond(
-    tokenExchangeService: TokenExchangeService,
+    tokenExchangeService: TokendingsExchangeService,
     params: TokendingsParams
 ) {
     try {
         val token = tokenExchangeService.getExchangedToken(params.subjectToken, params.audience, params.clientAssertion)
 
-        call.respond(TokenResponse(token))
+        call.respond(TokendingsTokenResponse(token))
     } catch (e: Exception) {
         call.respond(HttpStatusCode.InternalServerError)
     }

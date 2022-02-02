@@ -1,20 +1,22 @@
-package no.nav.tms.auth.mock.tokendings
+package no.nav.tms.auth.mock.azure
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
+import java.security.interfaces.RSAPublicKey
 
-class TokendingsMetadataBuilder(private val localUrl: String, private val publicJwk: String) {
-    fun createConfigurationMetadata(): TokendingsConfigurationMetadata {
+class AzureMetadataBuilder(private val localUrl: String, private val publicJwk: String) {
+    fun createConfigurationMetadata(): AzureConfigurationMetadata {
 
-        val tokenUrl = "$localUrl/tokendings/token"
-        val jwksUrl = "$localUrl/tokendikngs/jwks"
+        val tokenUrl = "$localUrl/azure/token"
+        val jwksUrl = "$localUrl/azure/jwks"
 
-        return TokendingsConfigurationMetadata(tokenUrl, localUrl, jwksUrl)
+        return AzureConfigurationMetadata(tokenUrl, localUrl, jwksUrl)
     }
 
     fun createJwksMetadata(): JwksMetadata {
+
         val jwkAsJson = Json.parseToJsonElement(publicJwk)
 
         return JwksMetadata(listOf(jwkAsJson))
@@ -22,10 +24,10 @@ class TokendingsMetadataBuilder(private val localUrl: String, private val public
 }
 
 @Serializable
-data class TokendingsConfigurationMetadata(
+data class AzureConfigurationMetadata(
         @SerialName("token_endpoint") val tokenEndpoint: String,
         @SerialName("issuer") val issuer: String,
-        @SerialName("jwks_uri") val jwksUri: String = ""
+        @SerialName("jwks_uri") val jwksUri: String
 )
 
 @Serializable
