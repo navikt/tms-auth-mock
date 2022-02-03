@@ -5,7 +5,7 @@ import no.nav.tms.auth.mock.azure.AzureMetadataBuilder
 import no.nav.tms.auth.mock.azure.AzureTokenBuilderService
 import no.nav.tms.auth.mock.common.JwkBuilder
 import no.nav.tms.auth.mock.tokendings.TokendingsExchangeService
-import no.nav.tms.auth.mock.tokendings.TokenXJwtBuilder
+import no.nav.tms.auth.mock.tokendings.TokendingsJwtBuilder
 import no.nav.tms.auth.mock.tokendings.TokendingsMetadataBuilder
 
 class ApplicationContext {
@@ -15,7 +15,7 @@ class ApplicationContext {
     val tokendingsPrivateJwk = environment.tokendingsPrivateJwk
     val tokendingsPublicJwk = JwkBuilder.getPublicJwk(environment.tokendingsPrivateJwk)
 
-    private val tokenXJwtBuilder = TokenXJwtBuilder(environment.tokendingsPrivateJwk, environment.localUrl)
+    private val tokenXJwtBuilder = TokendingsJwtBuilder(environment.tokendingsPrivateJwk, environment.localUrl)
     val tokendingsExchangeService = TokendingsExchangeService(tokenXJwtBuilder)
     val tokendingsMetadataBuilder = TokendingsMetadataBuilder(environment.localUrl, tokendingsPublicJwk)
 

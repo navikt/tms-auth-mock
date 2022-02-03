@@ -12,7 +12,7 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
 
-class TokenXJwtBuilder(privateJwk: String, private val localUrl: String) {
+class TokendingsJwtBuilder(privateJwk: String, private val localUrl: String) {
 
     private val privateRsaKey = RSAKey.parse(privateJwk)
 

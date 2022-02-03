@@ -9,7 +9,7 @@ class TokendingsMetadataBuilder(private val localUrl: String, private val public
     fun createConfigurationMetadata(): TokendingsConfigurationMetadata {
 
         val tokenUrl = "$localUrl/tokendings/token"
-        val jwksUrl = "$localUrl/tokendikngs/jwks"
+        val jwksUrl = "$localUrl/tokendings/jwks"
 
         return TokendingsConfigurationMetadata(tokenUrl, localUrl, jwksUrl)
     }
