@@ -25,9 +25,9 @@ internal class AzureTokenBuilderServiceTest {
 
         every { jwtBuilder.buildToken(clientId, capture(capturedTargetApp)) } returns expectedToken
 
-        val createdToken = tokenBuilderService.createToken(clientId, scope)
+        val createdToken = tokenBuilderService.createToken(scope, clientId)
 
         createdToken `should be equal to` expectedToken
-        capturedTargetApp `should be equal to` targetApp
+        capturedTargetApp.captured `should be equal to` targetApp
     }
 }
