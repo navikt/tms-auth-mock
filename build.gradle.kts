@@ -1,10 +1,10 @@
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     // Apply the Kotlin JVM plugin to add support for Kotlin on the JVM.
     kotlin("jvm").version(Kotlin.version)
     kotlin("plugin.allopen").version(Kotlin.version)
+    kotlin("plugin.serialization").version(Kotlin.version)
 
     id(Shadow.pluginId) version (Shadow.version)
     // Apply the application plugin to add support for building a CLI application.
@@ -16,12 +16,10 @@ tasks.withType<KotlinCompile> {
 }
 
 repositories {
-    // Use jcenter for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
-    jcenter()
-    maven("https://packages.confluent.io/maven")
     maven("https://jitpack.io")
     mavenLocal()
+    mavenCentral()
+    maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
 }
 
 dependencies {
@@ -38,9 +36,8 @@ dependencies {
     implementation(Ktor.clientLogging)
     implementation(Ktor.clientLoggingJvm)
     implementation(Ktor.clientSerializationJvm)
-    implementation(Ktor.htmlBuilder)
-    implementation(Ktor.jackson)
     implementation(Ktor.serverNetty)
+    implementation(Nimbusds.joseJwt)
     implementation(Ktor.serialization)
     implementation(Logback.classic)
     implementation(Logstash.logbackEncoder)
@@ -66,17 +63,11 @@ tasks {
     withType<Test> {
         useJUnitPlatform()
         testLogging {
-            exceptionFormat = TestExceptionFormat.FULL
             events("passed", "skipped", "failed")
         }
     }
 
     register("runServer", JavaExec::class) {
-
-        environment("CORS_ALLOWED_ORIGINS", "localhost:9002")
-
-        environment("NAIS_CLUSTER_NAME", "dev-sbs")
-        environment("NAIS_NAMESPACE", "personbruker")
 
         main = application.mainClassName
         classpath = sourceSets["main"].runtimeClasspath
