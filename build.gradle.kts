@@ -6,7 +6,7 @@ plugins {
     kotlin("plugin.allopen").version(Kotlin.version)
     kotlin("plugin.serialization").version(Kotlin.version)
 
-    id(Shadow.pluginId) version ("7.1.2")
+    id(Shadow.pluginId) version (Shadow.version)
     // Apply the application plugin to add support for building a CLI application.
     application
 }
