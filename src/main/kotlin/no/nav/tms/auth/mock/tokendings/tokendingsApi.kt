@@ -6,6 +6,7 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.util.pipeline.*
+import no.nav.tms.auth.mock.tokendings.ClientAssertion.createSignedAssertion
 
 fun Route.tokenApi(
     tokendingsMetadataBuilder: TokendingsMetadataBuilder,
@@ -21,6 +22,17 @@ fun Route.tokenApi(
         val metadata = tokendingsMetadataBuilder.createJwksMetadata()
 
         call.respond(metadata)
+    }
+
+    get("/tokendings/clientassertion") {
+        val params = call.request.queryParameters
+        val clientId = params["clientId"]
+        val audience = params["audience"]
+        if(clientId != null && audience != null) {
+            call.respond(createSignedAssertion(clientId, audience))
+        } else {
+            call.respond(HttpStatusCode.BadRequest)
+        }
     }
 
     post("/tokendings/token") {
@@ -60,3 +72,4 @@ private suspend fun ApplicationCall.receiveTokendingsParams(): TokendingsParams?
         TokendingsParams(clientAssertion, subjectToken, audience)
     }
 }
+
