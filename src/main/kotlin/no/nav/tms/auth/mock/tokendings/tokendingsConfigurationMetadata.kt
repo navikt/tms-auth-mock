@@ -5,13 +5,25 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 
-class TokendingsMetadataBuilder(private val localUrl: String, private val publicJwk: String) {
-    fun createConfigurationMetadata(): TokendingsConfigurationMetadata {
+class TokendingsMetadataBuilder(private val localUrl: String, private val internalDockerUrl: String?, private val publicJwk: String) {
+
+    fun localConfigurationMetadata(): TokendingsConfigurationMetadata {
 
         val tokenUrl = "$localUrl/tokendings/token"
         val jwksUrl = "$localUrl/tokendings/jwks"
 
         return TokendingsConfigurationMetadata(tokenUrl, localUrl, jwksUrl)
+    }
+
+    fun dockerConfigurationMetadata(): TokendingsConfigurationMetadata {
+        if (internalDockerUrl == null) {
+            throw RuntimeException("Url in docker environment was not set")
+        }
+
+        val tokenUrl = "$internalDockerUrl/tokendings/token"
+        val jwksUrl = "$internalDockerUrl/tokendings/jwks"
+
+        return TokendingsConfigurationMetadata(tokenUrl, internalDockerUrl, jwksUrl)
     }
 
     fun createJwksMetadata(): JwksMetadata {

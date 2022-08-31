@@ -6,7 +6,7 @@ import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should contain`
 import org.junit.jupiter.api.Test
 
-internal class TokendingsJwtBuilderTest {
+internal class AzureJwtBuilderTest {
 
     private val clientApp = "cluster:namespace:clientApp"
     private val targetApp = "cluster:namespace:otherApp"
@@ -18,7 +18,7 @@ internal class TokendingsJwtBuilderTest {
     private val jwtBuilder = AzureJwtBuilder(jwk, tokendingsUrl, tenantId)
 
     @Test
-    fun `should imitate token exchange done by tokendings app`() {
+    fun `should imitate token exchange done by azure app`() {
         val exchangedToken = jwtBuilder.buildToken(clientApp, targetApp)
 
         val tokenClaims = JWTParser.parse(exchangedToken).jwtClaimsSet

@@ -8,12 +8,23 @@ import io.ktor.routing.*
 import io.ktor.util.pipeline.*
 import no.nav.tms.auth.mock.tokendings.ClientAssertion.createSignedAssertion
 
-fun Route.tokenApi(
+fun Route.tokendingsApi(
     tokendingsMetadataBuilder: TokendingsMetadataBuilder,
-    tokenExchangeService: TokendingsExchangeService
+    tokenExchangeService: TokendingsExchangeService,
+    runningInDockerEnv: Boolean
 ) {
     get("/tokendings/.well-known/oauth-authorization-server") {
-        val metadata = tokendingsMetadataBuilder.createConfigurationMetadata()
+        val metadata = tokendingsMetadataBuilder.localConfigurationMetadata()
+
+        call.respond(metadata)
+    }
+
+    get("/tokendings/docker/.well-known/oauth-authorization-server") {
+        if (!runningInDockerEnv) {
+            call.respond(HttpStatusCode.NotFound, "docker-internal network address not specified")
+        }
+
+        val metadata = tokendingsMetadataBuilder.dockerConfigurationMetadata()
 
         call.respond(metadata)
     }

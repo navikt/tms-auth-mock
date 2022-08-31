@@ -17,12 +17,12 @@ class ApplicationContext {
 
     private val tokenXJwtBuilder = TokendingsJwtBuilder(environment.tokendingsPrivateJwk, environment.localUrl)
     val tokendingsExchangeService = TokendingsExchangeService(tokenXJwtBuilder)
-    val tokendingsMetadataBuilder = TokendingsMetadataBuilder(environment.localUrl, tokendingsPublicJwk)
+    val tokendingsMetadataBuilder = TokendingsMetadataBuilder(environment.localUrl, environment.internalDockerUrl, tokendingsPublicJwk)
 
     val azurePrivateJwk = environment.azurePrivateJwk
     val azurePublicJwk = JwkBuilder.getPublicJwk(azurePrivateJwk)
 
     private val azureJwtBuilder = AzureJwtBuilder(environment.azurePrivateJwk, environment.localUrl, environment.azureTenantId)
     val azureTokenBuilderService = AzureTokenBuilderService(azureJwtBuilder)
-    val azureMetadataBuilder = AzureMetadataBuilder(environment.localUrl, azurePublicJwk)
+    val azureMetadataBuilder = AzureMetadataBuilder(environment.localUrl, environment.internalDockerUrl ,azurePublicJwk)
 }

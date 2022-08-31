@@ -7,7 +7,7 @@ import io.ktor.serialization.*
 import no.nav.tms.auth.mock.azure.azureApi
 import no.nav.tms.auth.mock.common.jwkApi
 import no.nav.tms.auth.mock.health.healthApi
-import no.nav.tms.auth.mock.tokendings.tokenApi
+import no.nav.tms.auth.mock.tokendings.tokendingsApi
 
 fun Application.mainModule(appContext: ApplicationContext = ApplicationContext()) {
 
@@ -19,8 +19,15 @@ fun Application.mainModule(appContext: ApplicationContext = ApplicationContext()
 
     routing {
         jwkApi()
-        tokenApi(appContext.tokendingsMetadataBuilder, appContext.tokendingsExchangeService)
-        azureApi(appContext.azureMetadataBuilder, appContext.azureTokenBuilderService)
         healthApi()
+        tokendingsApi(
+            appContext.tokendingsMetadataBuilder,
+            appContext.tokendingsExchangeService,
+            appContext.environment.isRunningInDocker
+        )
+        azureApi(appContext.azureMetadataBuilder,
+            appContext.azureTokenBuilderService,
+            appContext.environment.isRunningInDocker
+        )
     }
 }

@@ -9,10 +9,21 @@ import io.ktor.util.pipeline.*
 
 fun Route.azureApi(
     azureMetadataBuilder: AzureMetadataBuilder,
-    tokenExchangeService: AzureTokenBuilderService
+    tokenExchangeService: AzureTokenBuilderService,
+    runningInDockerEnv: Boolean
 ) {
     get("/azure/.well-known/oauth-authorization-server") {
-        val metadata = azureMetadataBuilder.createConfigurationMetadata()
+        val metadata = azureMetadataBuilder.localConfigurationMetadata()
+
+        call.respond(metadata)
+    }
+
+    get("/azure/docker/.well-known/oauth-authorization-server") {
+        if (!runningInDockerEnv) {
+            call.respond(HttpStatusCode.NotFound, "docker-internal network address not specified")
+        }
+
+        val metadata = azureMetadataBuilder.dockerConfigurationMetadata()
 
         call.respond(metadata)
     }
