@@ -1,7 +1,6 @@
-FROM navikt/java:13-appdynamics
-COPY build/libs/tms-auth-mock-all.jar /app/app.jar
-ENV JAVA_OPTS="-XX:MaxRAMPercentage=75 \
-               -XX:+HeapDumpOnOutOfMemoryError \
-               -XX:HeapDumpPath=/oom-dump.hprof"
-ENV PORT=8080
-EXPOSE $PORT
+FROM gcr.io/distroless/java21-debian12
+ENV JAVA_OPTS='-XX:MaxRAMPercentage=75'
+COPY build/libs/*.jar ./
+ENV TZ="Europe/Oslo"
+EXPOSE 8080
+CMD ["app.jar"]
